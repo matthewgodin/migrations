@@ -2,7 +2,7 @@
 
 ## Description
 
-A simple Postgres utility inspired by Laravel Migrations.
+A simple Postgres utility inspired by Laravel Migrations. Uses Python 3.
 
 ## Usage
 
