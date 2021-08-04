@@ -1,1 +1,0 @@
-ALTER TABLE test_table ADD created_at TEXT;
