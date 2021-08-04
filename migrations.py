@@ -14,7 +14,7 @@ try:
             + str(date_time.microsecond) + '_' + sys.argv[2] + '.sql'
         f = open(file_name, 'w')
         f.close()
-        print("Migration " + file_name + " was created")
+        print("\nMigration " + file_name + " was created\n")
     elif len(sys.argv) == 2 and sys.argv[1] == 'migrate':
         files = os.listdir()
         files.sort()
