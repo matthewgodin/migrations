@@ -4,28 +4,31 @@ from datetime import datetime
 import psycopg2
 
 try:
+    MIGRATIONS_PATH = 'migrations/'
     LAST_PERFORMED_FILE = '.last_performed'
-    CONFIG_FILE = 'migrations.conf'
+    LAST_PERFORMED_FILE_PATH = MIGRATIONS_PATH + LAST_PERFORMED_FILE
+    CONFIG_FILE = MIGRATIONS_PATH + 'migrations.conf'
     if len(sys.argv) == 3 and sys.argv[1] == 'make':
         date_time = datetime.now()
         file_name = str(date_time.year) + '_' + str(date_time.month) + '_' \
             + str(date_time.day) + '_' + str(date_time.hour) + '_' \
             + str(date_time.minute) + '_' + str(date_time.second) + '_' \
             + str(date_time.microsecond) + '_' + sys.argv[2] + '.sql'
-        f = open(file_name, 'w')
+        f = open(MIGRATIONS_PATH + file_name, 'w')
         f.close()
         print("\nMigration " + file_name + " was created\n")
     elif len(sys.argv) == 2 and sys.argv[1] == 'migrate':
-        files = os.listdir()
+        files = os.listdir(MIGRATIONS_PATH)
         files.sort()
         if len(files) > 0:
             i = 0
             while files[i][0] == '.':
                 i += 1
             if LAST_PERFORMED_FILE in files:
-                f = open(LAST_PERFORMED_FILE, 'r')
+                f = open(LAST_PERFORMED_FILE_PATH, 'r')
                 last_performed = f.read()
                 f.close()
+                print(last_performed)
                 while files[i] != last_performed:
                     i += 1
                 i += 1
@@ -52,14 +55,14 @@ try:
                     print()
                 while files[i].endswith('.sql'):
                     print("Executing migration " + files[i])
-                    f = open(files[i], 'r')
+                    f = open(MIGRATIONS_PATH + files[i], 'r')
                     sql_script_content = f.read()
                     f.close()
                     with ps_connection:
                         with ps_connection.cursor() as curs:
                             curs.execute(sql_script_content)
                     print("Executed migration " + files[i] + " successfully")
-                    f = open(LAST_PERFORMED_FILE, 'w')
+                    f = open(LAST_PERFORMED_FILE_PATH, 'w')
                     f.write(files[i])
                     f.close()
                     i += 1
